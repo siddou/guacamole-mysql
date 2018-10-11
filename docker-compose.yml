@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:${MYSQL_VERSION}
+    hostname: db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+     - ./data:/var/lib/mysql
+     - ./sql-scripts/:/docker-entrypoint-initdb.d/
+
+  guacd:
+    image: "guacamole/guacd"
+    hostname: guacd
+
+  guacamole:
+    image: "guacamole/guacamole"
+    links:
+     - db
+     - guacd
+    environment:
+      MYSQL_HOSTNAME: db
+      GUACD_HOSTNAME: guacd
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+     - ${GUACAMOLE_PORT}:8080
+
+volumes:
+  sql-scripts:
+  data:
