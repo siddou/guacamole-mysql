@@ -11,6 +11,7 @@ docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > sql-s
 ```
 ### Run:
 ```shell
+mv .env.example .env
 docker-compose up -d
 ```
 
